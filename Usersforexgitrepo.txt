@@ -1,0 +1,4 @@
+1.  git clone https://github.com/mujahed85/DailyDevOpsTasks.git
+
+2. cd DailyDevOpsTasks/
+
