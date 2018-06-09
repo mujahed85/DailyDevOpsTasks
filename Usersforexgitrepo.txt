@@ -1,4 +1,4 @@
 1.  git clone https://github.com/mujahed85/DailyDevOpsTasks.git
 
 2. cd DailyDevOpsTasks/
-
+note : it will create a . git folder in daily devops task
