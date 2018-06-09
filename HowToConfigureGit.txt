@@ -1,0 +1,25 @@
+How to Configure Github:-
+-------------------------
+First Time:-
+------------
+1) create new file and store some text
+	echo "Message or Text "  >> FileName.extension
+
+2) Initialize Git Repository using
+	git init
+3) Add changed file:
+	git add README.md
+4) Add Message to File/s
+	git commit -m "first commit"
+
+3/4) git commit -am "Commit Message"
+
+5) Add Remote Origin[this requires internet to upload your changes]
+	git remote add origin https://github.com/mujahed85/DailyDevOpsTasks.git
+	git push -u origin master
+	
+if you already configure git use following commands:
+----------------------------------------------------
+git commit -am "Commit Message"
+git remote add origin https://github.com/mujahed85/DailyDevOpsTasks.git
+git push -u origin master
