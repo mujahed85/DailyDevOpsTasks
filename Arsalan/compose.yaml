@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: always
+    ports:
+      - "8080:8081"   # Expose Jenkins UI
+      - "50000:50000" # Expose Jenkins slave agent port
+    volumes:
+      - jenkins_home:/var/jenkins_home  # Persist Jenkins data
+    networks:
+      - jenkins-network
+
+  java-maven:
+    image: maven:3-openjdk-11  # Maven and Java 11
+    container_name: java_maven
+    command: tail -f /dev/null  # Keep the container running
+    networks:
+      - jenkins-network
+    volumes:
+      - ./workspace:/workspace  # Mount a shared directory for Jenkins to access
+
+volumes:
+  jenkins_home:  # Volume for Jenkins data persistence
+
+networks:
+  jenkins-network:
+    driver: bridge
+
+
