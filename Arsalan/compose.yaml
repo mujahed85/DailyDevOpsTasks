@@ -6,7 +6,7 @@ services:
     container_name: jenkins
     restart: always
     ports:
-      - "8080:8081"   # Expose Jenkins UI
+      - "8080:8080"   # Expose Jenkins UI
       - "50000:50000" # Expose Jenkins slave agent port
     volumes:
       - jenkins_home:/var/jenkins_home  # Persist Jenkins data
