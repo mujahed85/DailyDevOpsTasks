@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes
+  tasks: 
+  - name: Install MySQL server
+    apt: name=mysql-server state=latest
+  - name: Install Php5 with MySQL
+    apt: name=php5-mysql state=latest
+  - name: Install PhpMyAdmin GUI for MySQL Database
+    apt: name=phpmyadmin state=latest

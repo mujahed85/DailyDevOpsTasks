@@ -1,0 +1,11 @@
+---
+- name: key value pair example
+  hosts: ws
+  tasks:
+  - debug:
+      msg: "key = {{ item.key }}, value = {{ item.value }}"
+    with_items:
+      - { key: 'fruit', value: 'banana' }
+      - { key: 'fruit', value: 'orange' }
+      - { key: 'veggy', value: 'onion' }
+      - { key: 'veggy', value: 'pepper' }

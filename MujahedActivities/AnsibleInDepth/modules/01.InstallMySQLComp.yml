@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  tasks: 
+  - name: Install MySQL server
+    apt: name=mysql-server state=latest
+  - name: Install packages
+    apt:
+      name:
+      - mysql-server
+      - php5-mysql
+      state: latest
+      cache_valid_time: 3600

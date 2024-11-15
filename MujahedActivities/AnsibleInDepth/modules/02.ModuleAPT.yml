@@ -1,0 +1,9 @@
+# cat <<EOF > InstallApacheWebServer.yaml
+---
+- name: Installing Apache Web Server
+    hosts: all
+    become: true
+    tasks:
+     - name: install apache
+       apt: name=apache2 update_cache=yes state=latest
+# EOF
