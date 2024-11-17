@@ -5,6 +5,9 @@
     cakephp_version: "4.5.0"  # Adjust this to the desired CakePHP version
     project_name: "my_cakephp_project"
     project_dir: "/var/www/{{ project_name }}"
+    db_name: "cakephp_db"
+    db_user: "admin"
+    db_password: "admin"  # Replace with a secure password
   tasks:
     - name: Update the package index
       apt:
@@ -53,6 +56,11 @@
       args:
         creates: /usr/local/bin/composer
 
+    - name: Ensure the project directory is empty
+      file:
+        path: "{{ project_dir }}"
+        state: absent
+
     - name: Create project directory
       file:
         path: "{{ project_dir }}"
@@ -63,10 +71,12 @@
 
     - name: Install CakePHP using Composer
       shell: |
+        export COMPOSER_ALLOW_SUPERUSER=1
         composer create-project --prefer-dist cakephp/app:"{{ cakephp_version }}" "{{ project_dir }}" --no-interaction --verbose
       args:
         chdir: /var/www
-
+      environment:
+        COMPOSER_ALLOW_SUPERUSER: "1"
 
     - name: Set permissions for project directory
       file:
@@ -105,3 +115,25 @@
       service:
         name: apache2
         state: restarted
+
+    - name: Create MySQL database for CakePHP
+      mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        collation: utf8_general_ci
+        encoding: utf8mb4
+
+    - name: Create MySQL user for CakePHP
+      mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+
+    - name: Grant privileges to CakePHP MySQL user
+      mysql_user:
+        name: "{{ db_user }}"
+        host: "%"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present

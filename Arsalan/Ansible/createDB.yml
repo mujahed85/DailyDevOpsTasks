@@ -1,0 +1,31 @@
+---
+- name: MySQL Database and User Setup for CakePHP
+  hosts: all
+  become: yes
+  vars:
+    db_name: "cakephp_db"         # Replace with the desired database name
+    db_user: "admin"       # Replace with the desired database username
+    db_password: "admin" # Replace with a secure password
+
+  tasks:
+    - name: Create MySQL database for CakePHP
+      mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        collation: utf8_general_ci
+        encoding: utf8mb4
+
+    - name: Create MySQL user for CakePHP
+      mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+
+    - name: Grant privileges to CakePHP MySQL user
+      mysql_user:
+        name: "{{ db_user }}"
+        host: "%"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
