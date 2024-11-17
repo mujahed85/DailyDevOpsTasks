@@ -1,0 +1,105 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    cakephp_version: "4.5.0"  # Adjust this to the desired CakePHP version
+    project_name: "my_cakephp_project"
+    project_dir: "/var/www/{{ project_name }}"
+  tasks:
+    - name: Update the package index
+      apt:
+        update_cache: yes
+
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: latest
+
+    - name: Install MySQL server
+      apt:
+        name: mysql-server
+        state: latest
+
+    - name: Install PHP and related modules
+      apt:
+        name:
+          - php
+          - libapache2-mod-php
+          - php-mysql
+          - php-xml
+          - php-intl
+          - php-mbstring
+          - unzip
+          - curl
+        state: latest
+
+    - name: Install PhpMyAdmin GUI for MySQL Database
+      apt:
+        name: phpmyadmin
+        state: latest
+
+    - name: Enable Apache mod_rewrite
+      command: a2enmod rewrite
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
+
+    - name: Install Composer (Dependency Manager for PHP)
+      shell: |
+        curl -sS https://getcomposer.org/installer | php
+        mv composer.phar /usr/local/bin/composer
+      args:
+        creates: /usr/local/bin/composer
+
+    - name: Create project directory
+      file:
+        path: "{{ project_dir }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Install CakePHP using Composer
+      command: composer create-project --prefer-dist cakephp/app:"{{ cakephp_version }}" "{{ project_dir }}"
+      args:
+        chdir: /var/www
+
+    - name: Set permissions for project directory
+      file:
+        path: "{{ project_dir }}"
+        owner: www-data
+        group: www-data
+        recurse: yes
+
+    - name: Configure Apache VirtualHost for CakePHP
+      copy:
+        dest: /etc/apache2/sites-available/{{ project_name }}.conf
+        content: |
+          <VirtualHost *:80>
+              ServerAdmin webmaster@localhost
+              DocumentRoot {{ project_dir }}/webroot
+              ServerName {{ project_name }}.local
+
+              <Directory {{ project_dir }}/webroot>
+                  Options Indexes FollowSymLinks MultiViews
+                  AllowOverride All
+                  Order allow,deny
+                  allow from all
+              </Directory>
+
+              ErrorLog ${APACHE_LOG_DIR}/{{ project_name }}_error.log
+              CustomLog ${APACHE_LOG_DIR}/{{ project_name }}_access.log combined
+          </VirtualHost>
+
+    - name: Enable the CakePHP site
+      command: a2ensite {{ project_name }}.conf
+
+    - name: Disable the default Apache site
+      command: a2dissite 000-default.conf
+
+    - name: Restart Apache to apply changes
+      service:
+        name: apache2
+        state: restarted
