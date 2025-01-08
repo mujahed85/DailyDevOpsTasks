@@ -1,0 +1,83 @@
+## craete jar file using cli
+
+```bash
+mvn archetype:generate ^
+  -DgroupId=com.example.helloworld ^
+  -DartifactId=helloworld ^
+  -Dversion=1.0-SNAPSHOT ^
+  -DarchetypeArtifactId=maven-archetype-quickstart ^
+  -DinteractiveMode=false
+```
+
+### Add Spring Boot Dependency in pom.xml
+```bash
+<dependencies>
+    <!-- Spring Boot Starter Web for Web Application -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!-- Add Spring Boot Starter Test for Testing -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <!-- Spring Boot Maven Plugin for packaging the app -->
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+```
+
+### Create the Main Class for Spring Boot
+
+1. In the src/main/java/com/example/helloworld directory, create a DemoApplication.java file:
+
+```java
+package com.example.helloworld;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@SpringBootApplication
+@RestController
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @GetMapping("/")
+    public String helloWorld() {
+        return "Hello, World!";
+    }
+}
+```
+
+### Run the Spring Boot Web Application
+
+1. Build the Project:
+```cmd
+mvn clean package
+```
+
+2. Run the Application:
+
+```cmd
+java -jar target/helloworld-1.0-SNAPSHOT.jar
+```
+
+3. Access the Web Application: Open your browser and navigate to:
+
+```cmd
+http://localhost:8080
+```
