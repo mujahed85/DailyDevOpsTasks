@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash
 
 # Step 1: Generate a Maven Project using Archetype
 echo "Generating Maven Project..."
