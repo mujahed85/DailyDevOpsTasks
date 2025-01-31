@@ -1,0 +1,7 @@
+---
+- name: Ping all running EC2 instances
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ping instances
+      ansible.builtin.ping:

@@ -1,0 +1,9 @@
+- name: Copy a file to remote servers
+  ansible.builtin.copy:
+    src: /local/path/file.txt
+    dest: /remote/path/file.txt
+    owner: root
+    group: root
+    mode: '0644'
+    
+# Explanation: Copies a local file to remote servers with specified permissions.

@@ -1,0 +1,7 @@
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+# Explanation: Updates the package cache and installs Nginx.

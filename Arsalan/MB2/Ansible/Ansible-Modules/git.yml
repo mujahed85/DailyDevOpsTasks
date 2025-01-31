@@ -1,0 +1,5 @@
+- name: Clone a Git repository
+  ansible.builtin.git:
+    repo: https://github.com/user/repo.git
+    dest: /opt/myapp
+    version: main

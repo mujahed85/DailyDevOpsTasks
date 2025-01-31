@@ -1,0 +1,19 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-east-1
+hostnames:
+  - instance-id
+filters:
+  instance-state-name: running
+keyed_groups:
+  - key: tags.Group
+    prefix: "group_"
+  - key: instance_type
+    prefix: "type_"
+  - key: vpc_id
+    prefix: "vpc_"
+compose:
+  ansible_user: ubuntu
+  ansible_host: public_ip_address
+  ansible_ssh_private_key_file: /home/ubuntu/.ssh/mujahed.pem
+  ansible_ssh_common_args: '-o IdentitiesOnly=yes'  # Force SSH to use ONLY this key

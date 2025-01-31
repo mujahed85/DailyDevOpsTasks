@@ -1,0 +1,19 @@
+- name: Example Playbook
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy index.html
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html

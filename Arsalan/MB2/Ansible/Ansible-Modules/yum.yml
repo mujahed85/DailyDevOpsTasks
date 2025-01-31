@@ -1,0 +1,6 @@
+- name: Install Apache
+  ansible.builtin.yum:
+    name: httpd
+    state: present
+
+# Explanation: Installs the httpd package (Apache) on Red Hat-based systems.

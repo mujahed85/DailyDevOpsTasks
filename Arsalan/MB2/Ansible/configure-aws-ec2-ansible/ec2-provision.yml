@@ -1,0 +1,74 @@
+- name: Provision and Configure EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    key_name: "your-existing-key-name"        # Existing SSH key pair name
+    security_groups: ["your-existing-sg"]     # Existing security group name
+    instance_type: "t2.micro"
+    ami_id: "ami-0c55b159cbfafe1f0"           # Amazon Linux 2 (us-east-1)
+    region: "us-east-1"
+    ssh_user: "ec2-user"                      # SSH user for your AMI
+    ssh_key_path: "/path/to/existing-key.pem" # Path to existing private key
+
+  tasks:
+    - name: Launch EC2 Instance
+      community.aws.ec2_instance:
+        key_name: "{{ key_name }}"
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ ami_id }}"
+        region: "{{ region }}"
+        security_groups: "{{ security_groups }}"
+        wait: yes
+        tags:
+          Name: "Ansible-Provisioned"
+      register: ec2_instance
+
+    - name: Wait for SSH to Start
+      ansible.builtin.wait_for:
+        host: "{{ ec2_instance.instances[0].public_ip_address }}"
+        port: 22
+        timeout: 300
+
+    - name: Add Instance to Inventory
+      ansible.builtin.add_host:
+        name: "{{ ec2_instance.instances[0].public_ip_address }}"
+        groups: "configured_instances"
+        ansible_user: "{{ ssh_user }}"
+        ansible_ssh_private_key_file: "{{ ssh_key_path }}"
+
+- name: Configure Application
+  hosts: configured_instances
+  become: yes
+  tasks:
+    - name: Update Package Cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      when: ansible_os_family == 'Debian'
+
+    - name: Start and Enable Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy Sample Index Page
+      ansible.builtin.copy:
+        content: "Hello from Ansible-provisioned Ubuntu instance!"
+        dest: /var/www/html/index.nginx-debian.html
+      notify:
+        - Reload Nginx
+
+  handlers:
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded

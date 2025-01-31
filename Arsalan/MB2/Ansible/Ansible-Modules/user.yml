@@ -1,0 +1,7 @@
+- name: Create a user with a home directory
+  ansible.builtin.user:
+    name: devuser
+    comment: "Developer User"
+    group: developers
+    shell: /bin/bash
+    create_home: yes
