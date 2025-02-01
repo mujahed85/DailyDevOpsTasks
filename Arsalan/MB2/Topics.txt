@@ -1,0 +1,11 @@
+configure AWS EC2 server with Ansible
+Ansible Modules
+Ansible Collections & Ansible Galaxy
+Ansible Variables - to make your Playbook customizable
+Troubleshooting in Ansible
+Conditionals
+Privilege Escalation
+Project: Deploy Nodejs Application
+Dynamic Inventory for EC2 Servers
+Project: Run Docker application
+

@@ -7,7 +7,7 @@
     security_groups: ["your-existing-sg"]     # Existing security group name
     instance_type: "t2.micro"
     ami_id: "ami-0c55b159cbfafe1f0"           # Amazon Linux 2 (us-east-1)
-    region: "us-east-1"
+    region: "ap-south-1"
     ssh_user: "ec2-user"                      # SSH user for your AMI
     ssh_key_path: "/path/to/existing-key.pem" # Path to existing private key
 
